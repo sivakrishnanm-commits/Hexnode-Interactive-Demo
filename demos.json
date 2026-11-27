@@ -4,5 +4,11 @@
     "description": "Experience a Windows 10 device migration from one MDM to Hexnode UEM. Interactive simulation shows the enrollment flow, gateway enrollment process, and seamless device transition.",
     "url": "demos/hexnode-gateway-migration.html",
     "tags": ["MDM", "Device Management", "Migration"]
+  },
+  {
+    "title": "Hexnode Access on Windows",
+    "description": "Explore Hexnode Access authentication flow with Windows sign-in simulation. See how second sign-in works with MFA for secure device access.",
+    "url": "demos/hexnode-access-windows-mfa.html",
+    "tags": ["Authentication", "Security", "MFA", "Access Control"]
   }
 ]
