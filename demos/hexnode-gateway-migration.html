@@ -11,8 +11,6 @@ html,body{margin:0;height:100%;background:#0c0e13;overflow:hidden;
   font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
 button{font:inherit;color:inherit;cursor:pointer}
 #shell{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-#label{height:26px;display:flex;align-items:center;gap:8px;color:#8b93a3;font-size:12px;letter-spacing:.02em}
-#label i{width:6px;height:6px;border-radius:50%;background:#34d399;display:inline-block}
 #fit{position:relative}
 #stage{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0;overflow:hidden;
   background:#000;user-select:none;-webkit-user-select:none;color:#000;font-size:12px}
@@ -217,7 +215,6 @@ button{font:inherit;color:inherit;cursor:pointer}
 </head>
 <body>
 <div id="shell">
-  <div id="label"><i></i>Interactive simulation · Hexnode Gateway on Windows 10 · nothing here touches a real device</div>
   <div id="fit">
   <div id="stage" aria-label="Simulated Windows 10 PC">
 
@@ -536,7 +533,7 @@ function layoutTip(){
 
 /* ---------- scaling ---------- */
 function fit(){
-  const aw=innerWidth-16, ah=innerHeight-26-12;
+  const aw=innerWidth-16, ah=innerHeight-16;
   const k=Math.max(.25,Math.min(aw/W, ah/720));
   fitEl.style.width=(W*k)+'px'; fitEl.style.height=(720*k)+'px';
   stage.style.transform='scale('+k+')';
