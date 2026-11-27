@@ -16,5 +16,11 @@
     "description": "Interactive macOS troubleshooting simulation with Hexnode remote access. See how to diagnose and resolve device issues remotely.",
     "url": "demos/hexnode-macos-remote-troubleshooting.html",
     "tags": ["macOS", "Remote Support", "Troubleshooting", "Device Management"]
+  },
+  {
+    "title": "Hexnode Windows Remote Troubleshooting",
+    "description": "Interactive Windows troubleshooting simulation with Hexnode remote access. Explore diagnostics and remote support for Windows devices.",
+    "url": "demos/hexnode-windows-remote-troubleshooting.html",
+    "tags": ["Windows", "Remote Support", "Troubleshooting", "Device Management"]
   }
 ]
