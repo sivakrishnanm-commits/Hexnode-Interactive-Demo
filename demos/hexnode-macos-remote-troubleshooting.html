@@ -16,9 +16,9 @@ html,body{margin:0;height:100%;background:var(--demo-bg);font-family:var(--font)
 [hidden]{display:none!important}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:2px solid #5b9bff;outline-offset:2px}
-#app{display:flex;height:100vh;min-height:560px}
-#stageWrap{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;padding:40px 16px 16px;position:relative;overflow:hidden}
-#stageBox{position:relative;border-radius:10px;box-shadow:0 18px 60px rgba(0,0,0,.55);overflow:hidden;flex:none}
+#app{display:flex;height:100vh}
+#stageWrap{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;padding:0;position:relative;overflow:hidden}
+#stageBox{position:relative;border-radius:0;overflow:hidden;flex:none}
 #stage{position:absolute;left:0;top:0;width:1280px;height:800px;transform-origin:0 0}
 
 #toast{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);background:#1d2027;color:#e8eaf0;border:1px solid #3a4050;border-radius:20px;padding:7px 16px;font-size:12.5px;z-index:8000;pointer-events:none;opacity:0;transition:opacity .2s}
@@ -486,6 +486,7 @@ function tipStep(){
   if(s.ended)return'end';
   if(s.session==='view'||s.session==='control'){
     if(s.seqRunning)return'watch';
+    if(!s.win.ra)return s.controlDone?'fixed':'viewMin';
     return s.controlDone?'fixed':'view';
   }
   if(s.alert)return'alertOk';
@@ -508,6 +509,7 @@ const TIPS={
   read:{t:'[data-msg="new"]',text:'IT’s message is here, unread. Select it to mark it as read.',prefer:['bottom','top']},
   start:{anchor:1,text:'Priya knows help is coming. IT now starts a remote session.',btn:'Start remote session',act:()=>startSession()},
   view:{t:'#raBanner',text:'IT is viewing Priya’s screen. Remote Assist shows the live session and a timer. Next, IT requests control.',prefer:['right','bottom'],btn:'Take control',act:()=>startControl()},
+  viewMin:{t:'#dkRa',text:'Remote Assist is minimized, but IT\u2019s session continues. Select it in the Dock to bring it back, or let IT take control.',prefer:['top'],btn:'Take control',act:()=>startControl()},
   fixed:{t:'#vpnStatus',text:'IT corrected the server address and the VPN is connected. IT now ends the session.',prefer:['left','bottom'],btn:'End session',act:()=>endSession()},
   end:{t:'#vpnStatus',text:'The session has ended and Priya’s Mac is back to normal. That’s the end of this demo.',prefer:['left','bottom'],btn:'Try again',act:()=>resetAll()}
 };
@@ -519,6 +521,13 @@ const BACKS={
   start:()=>{state.msgRead=false;state.uemPage='msgs';openWin('uem');}
 };
 function backToSend(){state.broadcast=false;state.bannerOpen=false;state.msgRead=false;state.filter='all';state.uemPage='enroll';closeWin('uem');}
+let lastKey='';
+function layoutKey(){
+  const c=TIPS[curStep];if(!c)return'';
+  const el=c.t?document.querySelector(c.t):null,r=el&&el.getClientRects().length?el.getBoundingClientRect():null,s=box.getBoundingClientRect();
+  return [innerWidth,innerHeight,s.left|0,s.top|0,s.width|0,r?[r.left|0,r.top|0,r.width|0,r.height|0].join():'-'].join('|');
+}
+setInterval(()=>{if(!tip.classList.contains('on'))return;const k=layoutKey();if(k!==lastKey){updateTip();}},120);
 function hideTip(){tip.classList.remove('on');ring.classList.remove('on');}
 function syncTip(){
   const st=tipStep();
@@ -547,6 +556,7 @@ function updateTip(){
   const el=c.t?document.querySelector(c.t):null;
   const r=el&&el.getClientRects().length?el.getBoundingClientRect():null;
   place(r,c.prefer||[]);
+  lastKey=layoutKey();
   tip.classList.add('on');
 }
 function place(r,prefs){
@@ -557,8 +567,8 @@ function place(r,prefs){
   if(!r){ // admin action: no on-device target, so anchor to the free area under the right-hand window
     ring.classList.remove('on');arrow.style.display='none';
     const sb=box.getBoundingClientRect();
-    const x=Math.min(Math.max(sb.left+1262*scale-w,m),vw-w-m);
-    const y=Math.min(Math.max(sb.top+704*scale-h,m),vh-h-m);
+    const x=Math.max(m,Math.min(sb.left+1262*scale-w,vw-w-m));
+    const y=Math.max(m,Math.min(sb.top+704*scale-h,vh-h-m));
     tip.style.left=x+'px';tip.style.top=y+'px';return;
   }
   arrow.style.display='';
@@ -571,7 +581,7 @@ function place(r,prefs){
   let pick=null;
   for(const s of order){const p=c[s];const fits=(s==='right'||s==='left')?(p.x>=m&&p.x+w<=vw-m):(p.y>=m&&p.y+h<=vh-m);if(fits){pick=s;break;}}
   if(!pick)pick=order[0];
-  const x=Math.min(Math.max(c[pick].x,m),vw-w-m),y=Math.min(Math.max(c[pick].y,m),vh-h-m);
+  const x=Math.max(m,Math.min(c[pick].x,vw-w-m)),y=Math.max(m,Math.min(c[pick].y,vh-h-m));
   tip.style.left=x+'px';tip.style.top=y+'px';
   const half=arrow.offsetWidth/2||6;
   if(pick==='right'||pick==='left'){
@@ -684,7 +694,7 @@ $('#tipBtn').addEventListener('click',tipAct);
 $('#labelBtn').addEventListener('click',tipAct);
 
 function fit(){
-  const w=$('#stageWrap').clientWidth-32,h=$('#stageWrap').clientHeight-56;
+  const w=$('#stageWrap').clientWidth,h=$('#stageWrap').clientHeight;
   scale=Math.max(.2,Math.min(w/1280,h/800));
   box.style.width=1280*scale+'px';box.style.height=800*scale+'px';
   stage.style.transform='scale('+scale+')';
@@ -692,7 +702,10 @@ function fit(){
   if(tip.classList.contains('on'))updateTip();
 }
 addEventListener('resize',fit);
+if(window.ResizeObserver)new ResizeObserver(()=>fit()).observe($('#stageWrap'));
+if(window.visualViewport)visualViewport.addEventListener('resize',fit);
 fit();render();fit();
+addEventListener('keydown',e=>{if((e.key==='f'||e.key==='F')&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&!/INPUT|TEXTAREA/.test((e.target.tagName||''))){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{});}});
 window.__demo={get state(){return state;},reset:resetAll};
 </script>
 </body>
