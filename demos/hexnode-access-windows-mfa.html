@@ -70,6 +70,13 @@ input{font:inherit}
 #s-hx{background:#000}
 .hxtile{width:6.4rem;height:6.4rem;background:#0a0c16;display:grid;place-items:center}
 .hxtile img{width:100%;height:100%;display:block}
+.uitem{display:flex;align-items:center;gap:.7rem;padding:.35rem .8rem .35rem .35rem;border-radius:.35rem;font-size:.8rem;min-width:12rem;border:1px solid transparent}
+.uitem.sel{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.08)}
+.uitem .av{width:2.1rem;height:2.1rem;border-radius:50%;background:#6c7078;display:grid;place-items:center;flex:none}
+.uitem .av svg{width:62%;height:62%}
+.uitem .av.hx{background:#0a0c16;border-radius:.25rem;overflow:hidden}
+.uitem .av.hx img{width:100%;height:100%;display:block}
+#userList{position:absolute;left:1.6rem;bottom:1.6rem;display:flex;flex-direction:column;gap:.35rem}
 .workrow{display:flex;align-items:center;gap:1.6rem;margin-top:1.6rem}
 .workrow .lbl{font-size:1.2rem;letter-spacing:.01em}
 .arrow-btn{width:2.3rem;height:2.3rem;border-radius:.4rem;display:grid;place-items:center;color:rgba(255,255,255,.75);transition:background .15s}
@@ -182,6 +189,12 @@ input{font:inherit}
       <span class="lbl">Sign in with a work account</span>
       <button id="hxGo" class="arrow-btn" type="submit" aria-label="Continue to work account sign-in"><svg><use href="#arrowR"/></svg></button>
     </form>
+  </div>
+  <!-- Accounts on this PC (display only, as in the reference screenshot) -->
+  <div id="userList" class="inert" aria-hidden="true">
+    <div class="uitem"><span class="av"><svg><use href="#person"/></svg></span><span>Admin</span></div>
+    <div class="uitem"><span class="av"><svg><use href="#person"/></svg></span><span>Alex Morgan</span></div>
+    <div class="uitem sel"><span class="av hx"><img id="hxSmall" alt=""></span><span>Login with a work account</span></div>
   </div>
   <div class="sysicons inert" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.6 16a5 5 0 0 1 6.8 0"/><circle cx="12" cy="19.2" r="1" fill="#fff"/></svg>
@@ -467,6 +480,7 @@ input{font:inherit}
   }
   clock(); setInterval(clock, 20000);
 
+  $("hxSmall").src = document.querySelector(".hxtile img").src;   // reuse the one embedded icon
   setState("a1_pw");
 })();
 </script>
