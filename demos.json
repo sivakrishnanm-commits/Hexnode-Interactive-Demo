@@ -10,5 +10,11 @@
     "description": "Explore Hexnode Access authentication flow with Windows sign-in simulation. See how second sign-in works with MFA for secure device access.",
     "url": "demos/hexnode-access-windows-mfa.html",
     "tags": ["Authentication", "Security", "MFA", "Access Control"]
+  },
+  {
+    "title": "Hexnode macOS Remote Troubleshooting",
+    "description": "Interactive macOS troubleshooting simulation with Hexnode remote access. See how to diagnose and resolve device issues remotely.",
+    "url": "demos/hexnode-macos-remote-troubleshooting.html",
+    "tags": ["macOS", "Remote Support", "Troubleshooting", "Device Management"]
   }
 ]
