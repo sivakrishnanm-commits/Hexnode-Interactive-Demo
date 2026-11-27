@@ -171,7 +171,21 @@ button{font:inherit;color:inherit;cursor:pointer}
 .stat .s2.on{color:#0f7b0f}
 .stat .s3{font-size:12px;color:#616161;margin-top:2px;min-height:16px}
 .stat .s3.err{color:#c42b1c}
-#vpnAddr.bad{border-bottom-color:#c42b1c}
+.btnrow{display:flex;gap:8px;margin-top:4px}
+.edlg{position:relative;width:392px;background:#fff;border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.35);padding:18px 22px 0;overflow:visible}
+.edlg h5{margin:0 0 12px;font-size:16px;font-weight:600}
+.edlg .fld{margin-bottom:10px}
+.edlg .fld[hidden]{display:none}
+.edlg .eft{background:#f3f3f3;margin:6px -22px 0;padding:12px 22px;display:flex;gap:8px;border-radius:0 0 8px 8px}
+.edlg .eft .btn-w{flex:1}
+.sel{width:100%;height:32px;border:1px solid #d1d1d1;border-bottom-color:#8a8a8a;border-radius:4px;padding:0 10px;font:inherit;font-size:13px;background:#fff;color:#1b1b1b;display:flex;align-items:center;justify-content:space-between;text-align:left}
+.sel span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sel svg{width:12px;height:12px;flex:none;margin-left:8px}
+.dd{position:absolute;z-index:5;margin:0;padding:4px;list-style:none;background:#fff;border:1px solid #d1d1d1;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.dd[hidden]{display:none}
+.dd li{padding:6px 10px;font-size:13px;border-radius:4px;cursor:default;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dd li:hover{background:#f0f0f0}
+.dd li[aria-selected="true"]{background:#eaf1fb}
 .btn-w{background:#fdfdfd;border:1px solid #d1d1d1;border-bottom-color:#b8b8b8;border-radius:4px;padding:0 20px;height:32px;font-size:13px;color:#1b1b1b}
 .btn-w.acc{background:#0067c0;border-color:#0067c0;color:#fff}
 .btn-w.acc:hover{background:#1975c5}
@@ -182,7 +196,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .cdlg h5{margin:0 0 8px;font-size:16px;font-weight:600}
 .cdlg p{margin:0;font-size:13px;color:#333;line-height:1.45}
 .cdlg .ft{background:#f3f3f3;padding:14px 22px;display:flex;justify-content:flex-end}
-.win-set.locked .set-body{pointer-events:none}
+.win-set.locked .set-body,.win-set.locked .scrim{pointer-events:none}
 
 /* ---- Remote Assist prompts (dialogs) ---- */
 .dlg{position:absolute;background:#fff;border-radius:8px;box-shadow:0 0 0 1px rgba(0,0,0,.2),0 20px 50px rgba(0,0,0,.4);z-index:900;overflow:hidden;animation:pop .22s ease-out}
@@ -229,7 +243,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .toastwin .tbody .t2{font-size:13.5px;line-height:1.35;color:#3a3a3a;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 
 /* ---- Remote cursor ---- */
-.cursor{position:absolute;left:0;top:0;z-index:2100;pointer-events:none;transition:transform .9s cubic-bezier(.5,0,.25,1),opacity .25s;opacity:0}
+.cursor{position:absolute;left:0;top:0;z-index:2100;pointer-events:none;transition:transform .7s cubic-bezier(.5,0,.25,1),opacity .25s;opacity:0}
 .cursor svg{width:22px;height:28px;display:block;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.45))}
 .ripple{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;border:2px solid rgba(40,110,255,.9);z-index:2090;pointer-events:none;opacity:0}
 .ripple.go{animation:rip .5s ease-out}
@@ -373,13 +387,21 @@ button{font:inherit;color:inherit;cursor:pointer}
                 <p class="set-sub">VPN connections</p>
                 <div class="set-card">
                   <div class="hd"><span class="vi"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.500" stroke-linejoin="round"><path d="M10 2 3.500 4.500v5c0 3.700 2.600 6.500 6.500 8 3.900-1.500 6.500-4.300 6.500-8v-5z"/><path d="m7.500 10 2 2 3.500-3.800" stroke-linecap="round"/></svg></span><span><b>Northwind VPN</b><small id="vpnSub">Disconnected</small></span></div>
-                  <div class="fld"><label for="vpnAddr">Server name or address</label><input id="vpnAddr" type="text" spellcheck="false" autocomplete="off"></div>
-                  <div class="fld"><label for="vpnAcct">User name</label><input id="vpnAcct" type="text" value="priya.nair" disabled></div>
                   <div class="stat"><div class="s1">Status</div><div class="s2" id="vpnStatus">Disconnected</div><div class="s3" id="vpnNote"></div></div>
-                  <button class="btn-w acc" id="vpnBtn">Connect</button>
+                  <div class="btnrow"><button class="btn-w acc" id="vpnBtn">Connect</button><button class="btn-w" id="vpnAdv">Advanced options</button></div>
                 </div>
               </div>
             </div>
+                      <div class="scrim" id="vpnEdit" role="dialog" aria-labelledby="veT" hidden><div class="edlg">
+              <h5 id="veT">Edit VPN connection</h5>
+              <div class="fld"><label>Connection name</label><input value="Northwind VPN" disabled></div>
+              <div class="fld"><label for="veAddr">Server name or address</label><input id="veAddr" type="text" spellcheck="false" autocomplete="off"></div>
+              <div class="fld"><label>VPN type</label><button type="button" class="sel" id="veType" aria-haspopup="listbox"><span id="veTypeV"></span><svg viewBox="0 0 12 12" fill="none" stroke="#444" stroke-width="1.300"><path d="m2.500 4.500 3.500 3.500 3.500-3.500" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+              <div class="fld"><label>Type of sign-in info</label><button type="button" class="sel" id="veAuth" aria-haspopup="listbox"><span id="veAuthV"></span><svg viewBox="0 0 12 12" fill="none" stroke="#444" stroke-width="1.300"><path d="m2.500 4.500 3.500 3.500 3.500-3.500" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+              <div class="fld" id="veUserRow"><label>User name (optional)</label><input value="priya.nair" disabled></div>
+              <div class="eft"><button class="btn-w acc" id="veSave">Save</button><button class="btn-w" id="veCancel">Cancel</button></div>
+              <ul class="dd" id="veList" role="listbox" hidden></ul>
+            </div></div>
           </section>
 
           <!-- Remote Assist prompts -->
@@ -467,10 +489,13 @@ const $=s=>document.querySelector(s);
 const screenEl=$('#screen'), stage=$('#stage'), box=$('#stageBox');
 let scale=1;
 const SW=1280, SH=720;
-const CORRECT='vpn.northwind.example', WRONG='vpn.northwnd.example';
+const CORRECT='vpn.northwind.example', WRONG='vpn-old.northwind.example';
+const TYPES=['Automatic','Point to Point Tunneling Protocol (PPTP)','L2TP/IPsec with certificate','L2TP/IPsec with pre-shared key','Secure Socket Tunneling Protocol (SSTP)','IKEv2'];
+const AUTHS=['User name and password','Smart card','One-time password','Certificate'];
+const TYPE_OK='IKEv2', TYPE_BAD=TYPES[1], AUTH_OK='User name and password', AUTH_BAD='Certificate';
 const MSG_OLD={date:'12/11/2026',time:'09:15',text:'Reminder: scheduled maintenance tonight from 22:00 to 23:00. Please save your work before you leave.'};
 const MSG_A1={date:'27/11/2026',time:'10:53',text:"Hi Priya Nair, we've noticed your VPN isn't connecting. IT will connect to your PC shortly to fix it."};
-const MSG_A2={date:'27/11/2026',time:'19:46',text:"Hi Priya Nair, IT corrected your VPN server address and the VPN now connects. No action is needed from you."};
+const MSG_A2={date:'27/11/2026',time:'19:46',text:"Hi Priya Nair, IT corrected your VPN settings. Select Connect in your VPN settings to reconnect."};
 const ICON_ENV_CLOSED='<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.600" stroke-linejoin="round"><rect x="2.500" y="4.500" width="15" height="11" rx="1.500"/><path d="m3 5.500 7 5.500 7-5.500"/></svg>';
 const ICON_ENV_OPEN='<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.500" stroke-linejoin="round"><path d="M2.500 8.500 10 3l7.500 5.500v7a1.500 1.500 0 0 1-1.500 1.500H4a1.500 1.500 0 0 1-1.500-1.500z"/><path d="m3 9 7 5 7-5"/></svg>';
 const XICON='<svg viewBox="0 0 13 13" fill="none"><circle cx="6.500" cy="6.500" r="5.600" stroke="#fff" stroke-width="1.100"/><path d="m4.400 4.400 4.200 4.200m0-4.200L4.400 8.600" stroke="#fff" stroke-width="1.100" stroke-linecap="round"/></svg>';
@@ -486,11 +511,12 @@ function clearSeq(){seqTimers.forEach(id=>{clearTimeout(id);clearInterval(id);ti
 /* ===================== State ===================== */
 function initialState(act){act=act||1;return{
   act,
-  broadcast:false,toast:null,msgRead:false,tried:false,
+  broadcast:false,toast:null,msgRead:false,tried:true,
   session:'none',unatt:false,uStarted:false,
   prompt:null,picker:false,screenShared:false,
   sessionDone:false,sessionStart:0,seqRunning:false,controlDone:false,
-  vpn:{addr:WRONG,status:'off',since:0},
+  vpn:{addr:WRONG,type:TYPE_BAD,auth:AUTH_BAD,status:'off',since:0},
+  edit:{open:false,addr:'',type:'',auth:'',list:null},
   win:{set:true,uem:false,ra:false},z:['set'],
   uemPage:'enroll',filter:'all',
   scr:act===2?'lock':'desktop',pw:0
@@ -575,18 +601,33 @@ function renderRa(){
 }
 function renderSet(){
   const v=state.vpn,s=v.status;
-  const inp=$('#vpnAddr');if(inp.value!==v.addr)inp.value=v.addr;
-  inp.disabled=s!=='off';
   const txt={off:'Disconnected',wait:'Connecting…',on:'Connected'}[s];
   $('#vpnStatus').textContent=txt;$('#vpnSub').textContent=txt;
   $('#vpnStatus').className='s2'+(s==='on'?' on':'');
   const b=$('#vpnBtn');b.textContent=s==='on'?'Disconnect':'Connect';b.disabled=s==='wait';b.classList.toggle('acc',s!=='on');
+  $('#vpnAdv').disabled=s==='wait';
   const fail=s==='off'&&state.tried;
-  $('#vpnNote').textContent=s==='on'?'Connected for '+fmtHMS(Date.now()-v.since):(fail?'Can’t connect. The server name could not be resolved.':'');
+  $('#vpnNote').textContent=s==='on'?'Connected for '+fmtHMS(Date.now()-v.since):(fail?'Can’t connect to Northwind VPN.':'');
   $('#vpnNote').classList.toggle('err',fail);
-  $('#vpnAddr').classList.toggle('bad',fail);
   WIN.set.classList.toggle('locked',state.seqRunning);
+  renderEdit();
 }
+function renderEdit(){
+  const e=state.edit;$('#vpnEdit').hidden=!e.open;
+  if(!e.open)return;
+  const a=$('#veAddr');if(a.value!==e.addr)a.value=e.addr;
+  $('#veTypeV').textContent=e.type;$('#veAuthV').textContent=e.auth;
+  $('#veUserRow').hidden=e.auth!==AUTH_OK;
+  const L=$('#veList');L.hidden=!e.list;
+  if(e.list){
+    const opts=e.list==='type'?TYPES:AUTHS,cur=e.list==='type'?e.type:e.auth,btn=$(e.list==='type'?'#veType':'#veAuth');
+    L.innerHTML=opts.map(o=>'<li role="option" data-v="'+o+'" aria-selected="'+(o===cur)+'">'+o+'</li>').join('');
+    L.style.top=(btn.offsetTop+btn.offsetHeight+2)+'px';L.style.left=btn.offsetLeft+'px';L.style.minWidth=btn.offsetWidth+'px';
+  }
+}
+function openEdit(){const v=state.vpn;state.edit={open:true,addr:v.addr,type:v.type,auth:v.auth,list:null};render();}
+function saveEdit(){const e=state.edit;if(!e.open)return;state.vpn.addr=e.addr;state.vpn.type=e.type;state.vpn.auth=e.auth;state.edit.open=false;state.edit.list=null;render();}
+function cancelEdit(){state.edit.open=false;state.edit.list=null;render();}
 function renderDialogs(){
   $('#dlgView').hidden=state.prompt!=='view';
   $('#dlgCtrl').hidden=state.prompt!=='control';
@@ -640,7 +681,7 @@ function tipStep(){
     return s.controlDone?'fixed':'view';
   }
   if(s.vpn.status==='wait')return'busy';
-  if(!s.broadcast)return(s.tried||s.vpn.status==='on')?'send':'connect';
+  if(!s.broadcast)return'send';
   if(!s.msgRead){
     if(s.win.uem&&s.uemPage==='msgs')return'read';
     if(s.toast==='uem')return'toast';
@@ -652,41 +693,46 @@ function tipStep2(){
   const s=state;
   if(s.sessionDone)return s.broadcast?'end2':'uSend';
   if(!s.uStarted)return'uStart';
-  if(s.seqRunning)return'uWatch';
-  return s.controlDone?'uFixed':'uView';
+  if(s.controlDone)return'uFixed';
+  if(!s.seqRunning)return'uView';
+  if(s.scr==='lock')return'uCtrl';
+  if(s.scr==='signin')return'uSign';
+  return'uFix';
 }
 const TIPS={
   connect:{t:'#vpnBtn',text:"Priya’s VPN won’t connect. Select Connect to try again.",prefer:['left','top']},
-  send:{anchor:1,text:'Priya can’t fix this herself. IT sends her a broadcast message.',btn:'Send broadcast',act:()=>doBroadcast()},
-  toast:{t:'#toastWin',text:'A notification arrives from Hexnode UEM. Select it to open the message.',prefer:['left','top']},
+  send:{anchor:1,text:'Priya’s VPN won’t connect and she can’t tell why. IT sends her a broadcast message.',btn:'Send broadcast',act:()=>doBroadcast()},
+  toast:{t:'#toastWin',text:'A notification arrives from Hexnode UEM and Priya opens the message.',prefer:['left','top']},
   dock:{t:'#dkUem',text:'Open Hexnode UEM from the taskbar to read the message.',prefer:['top']},
   navMsgs:{t:'#navMsgs',text:'Select Messages.',prefer:['right','bottom']},
   read:{t:'[data-msg="new"]',text:'IT’s message is here, unread. Select it to mark it as read.',prefer:['bottom','top']},
   start:{anchor:1,text:'Priya knows help is coming. IT now starts a remote session.',btn:'Start remote session',act:()=>startSession()},
   acceptView:{t:'#viewAccept',text:'A permission request appears on Priya’s PC. Select Accept.',prefer:['bottom','top']},
-  selScreen:{t:'#raSelBtn',text:'Priya now chooses which screen to share with IT.',prefer:['bottom','right']},
+  selScreen:{t:'#raSelBtn',text:'Priya accepts and chooses which screen to share with IT.',prefer:['bottom','right']},
   raMin0:{t:'#dkRa',text:'Open Remote Assist from the taskbar to choose the screen to share.',prefer:['top']},
-  share:{t:'#pickShare',text:'Select Share to share this screen with IT.',prefer:['bottom','top']},
+  share:{t:'#pickShare',text:'Priya selects Share to share this screen with IT.',prefer:['bottom','top']},
   view:{t:'#raBanner',text:'IT is viewing Priya’s screen. Remote Assist shows the live session and a timer. Next, IT requests control.',prefer:['right','bottom'],btn:'Take control',act:()=>startControl()},
   viewMin:{t:'#dkRa',text:'Remote Assist is minimized, but IT’s session continues. Select it in the taskbar to bring it back, or let IT request control.',prefer:['top'],btn:'Take control',act:()=>startControl()},
   acceptCtrl:{t:'#ctrlAccept',text:'IT requests control, so Priya sees a second prompt. Select Accept.',prefer:['bottom','top']},
-  fixed:{t:'#vpnStatus',text:'IT corrected the server address and the VPN is connected. IT now ends the session.',prefer:['left','bottom'],btn:'End session',act:()=>endSession()},
-  end1:{t:'#vpnStatus',text:'Priya is told the session has ended, and her VPN works. That’s the end of the attended session.',prefer:['left','bottom'],btn:'See unattended access',act:()=>beginAct2(),alt:{label:'Start over',act:()=>resetAll()}},
+  fixed:{t:'#vpnStatus',text:'IT corrected the VPN settings and the VPN is connected. IT now ends the session.',prefer:['left','bottom'],btn:'End session',act:()=>endSession()},
+  end1:{t:'#vpnStatus',text:'Priya is told the session has ended, and her VPN works. That’s the end of the attended session.',prefer:['left','bottom'],btn:'See unattended access',act:()=>beginAct2(),alt:{label:'Start over',act:()=>resetAll(),instant:true}},
   uStart:{anchor:1,text:'After hours: Priya’s PC is locked and the VPN is still down. With Unattended Remote Access enabled, IT can connect with nobody at the PC.',btn:'Start unattended session',act:()=>startUnattended()},
-  uView:{anchor:1,text:'No permission prompt appears on Priya’s PC. IT is viewing the device. Next, IT takes control.',btn:'Take control',act:()=>startControl()},
-  uFixed:{t:'#vpnStatus',text:'IT signed in at the lock screen and corrected the server address. The VPN is connected. IT now ends the session.',prefer:['left','bottom'],btn:'End session',act:()=>endSession()},
+  uView:{anchor:1,text:'No permission prompt appears on Priya’s PC. IT is viewing the locked device.'},
+  uCtrl:{anchor:1,text:'IT takes control of the PC. Still no prompt, and nobody has to be there.'},
+  uSign:{anchor:1,text:'IT signs in at the lock screen.'},
+  uFix:{anchor:1,text:'IT corrects the VPN server, VPN type and sign-in type, then connects.'},
+  uFixed:{t:'#vpnStatus',text:'IT signed in at the lock screen and corrected the VPN settings. The VPN is connected. IT now ends the session.',prefer:['left','bottom'],btn:'End session',act:()=>endSession()},
   uSend:{anchor:1,text:'IT sends Priya a broadcast message so she knows what changed.',btn:'Send broadcast',act:()=>doBroadcast()},
-  end2:{t:'#toastWin',text:'Priya’s VPN works and IT’s message is waiting for her. That’s the end of this demo.',prefer:['left','top'],btn:'Try again',act:()=>resetAll()}
+  end2:{t:'#toastWin',text:'The VPN is disconnected now that IT has left, but the settings are fixed. IT’s message tells Priya to select Connect. That’s the end of this demo.',prefer:['left','top'],btn:'Try again',act:()=>resetAll(),instant:true}
 };
 /* Back is offered only before anything irreversible happens (before the session is accepted / started). */
 const BACKS={
-  send:()=>{state.tried=false;},
   toast:()=>backToSend(),dock:()=>backToSend(),navMsgs:()=>backToSend(),read:()=>backToSend(),
-  start:()=>{state.msgRead=false;state.toast='uem';closeWin('uem');},
+  start:()=>{state.msgRead=false;state.toast='uem';closeWin('uem');scheduleAutoOpen();},
   acceptView:()=>{state.prompt=null;},
   uStart:()=>backToAct1()
 };
-function backToSend(){state.broadcast=false;state.toast=null;state.msgRead=false;state.filter='all';state.uemPage='enroll';closeWin('uem');}
+function backToSend(){clearTimeout(autoOpenTimer);hideCursor();state.broadcast=false;state.toast=null;state.msgRead=false;state.filter='all';state.uemPage='enroll';closeWin('uem');}
 let lastKey='';
 function layoutKey(){
   const c=TIPS[curStep];if(!c)return'';
@@ -760,15 +806,44 @@ function place(r,prefs){
 }
 
 /* ===================== Actions ===================== */
-function doBroadcast(){if(state.broadcast)return;state.broadcast=true;state.msgRead=false;state.toast='uem';render();}
+let autoOpenTimer=null;
+function scheduleAutoOpen(){ // Act 1 only: Priya opens the notification herself, shown with the demo cursor
+  if(state.act!==1)return;
+  clearTimeout(autoOpenTimer);timers.delete(autoOpenTimer);
+  const live=()=>state.toast==='uem'&&state.broadcast&&!state.msgRead&&state.session==='none';
+  autoOpenTimer=later(()=>{
+    if(!live())return;
+    const b=$('#twBody');if(!b||!b.getClientRects().length)return;
+    moveCursor(posOf(screenEl,.72,.35),true);
+    later(()=>{if(live())moveCursor(posOf($('#twBody'),.5,.5));},120);
+    later(()=>{if(live())ripple(posOf($('#twBody'),.5,.5));},1100);
+    later(()=>{if(!live()){hideCursor();return;}state.toast=null;state.msgRead=true;state.uemPage='msgs';state.filter='all';openWin('uem');render();},1250);
+    later(()=>{if(!state.seqRunning)hideCursor();},1700);
+  },2400);
+}
+function doBroadcast(){if(state.broadcast)return;state.broadcast=true;state.msgRead=false;state.toast='uem';render();scheduleAutoOpen();}
 function startSession(){ // attended: IT requests a view session, Priya gets a prompt
   if(state.session!=='none'||state.sessionDone||state.prompt)return;
   state.prompt='view';render();
 }
 function acceptView(){
   if(state.prompt!=='view')return;
+  const b=$('#viewAccept'),p0=b&&b.getClientRects().length?posOf(b,.5,.5):null;
   state.prompt=null;state.session='view';state.screenShared=false;
   openWin('ra');render();
+  autoShare(p0);
+}
+function autoShare(p0){ // Priya chooses the screen and selects Share (demo cursor)
+  const ok=()=>state.session==='view'&&!state.screenShared&&!state.seqRunning;
+  const at=sel=>{const e=$(sel);return e&&e.getClientRects().length?posOf(e,.5,.5):null;};
+  if(p0)moveCursor(p0,true);
+  later(()=>{if(!ok())return;const p=at('#raSelBtn');if(p)moveCursor(p);},700);
+  later(()=>{if(!ok())return;const p=at('#raSelBtn');if(p)ripple(p);},1600);
+  later(()=>{if(ok())openPicker();},1700);
+  later(()=>{if(!ok()||!state.picker)return;const p=at('#pickShare');if(p)moveCursor(p);},2300);
+  later(()=>{if(!ok()||!state.picker)return;const p=at('#pickShare');if(p)ripple(p);},3200);
+  later(()=>{if(ok()&&state.picker)sharePick();},3300);
+  later(()=>{if(!state.seqRunning)hideCursor();},3700);
 }
 function declineView(){if(state.prompt!=='view')return;state.prompt=null;render();}
 function openPicker(){if(state.session==='none'||state.screenShared||state.picker)return;state.picker=true;render();}
@@ -783,6 +858,7 @@ function startUnattended(){ // Act 2: no prompt, nobody at the PC
   if(state.session!=='none'||state.uStarted)return;
   state.uStarted=true;state.unatt=true;state.session='view';state.screenShared=true;state.sessionStart=Date.now();
   render();
+  later(()=>{if(state.unatt&&state.session==='view'&&!state.seqRunning&&!state.controlDone)startControl();},3000);
 }
 function stopTicks(){clearInterval(sessionTick);clearInterval(pvTick);}
 function endSession(){
@@ -791,6 +867,7 @@ function endSession(){
   const attended=!state.unatt;
   state.session='none';state.sessionDone=true;state.screenShared=false;state.prompt=null;state.picker=false;
   stopTicks();hideCursor();
+  if(!attended){state.vpn.status='off';state.vpn.since=0;state.tried=false;}
   if(attended){state.toast='ra';later(()=>{if(state.toast==='ra'){state.toast=null;render();}},9000);}
   render();
 }
@@ -816,7 +893,7 @@ function declineCtrl(){ // docs: declining the control request cancels the sessi
 }
 function typeInto(full,S,done){
   let i=0;
-  const id=every(()=>{i++;state.vpn.addr=full.slice(0,i);renderSet();if(i>=full.length){clearInterval(id);seqTimers.delete(id);timers.delete(id);if(done)done();}},55,seqTimers);
+  const id=every(()=>{i++;state.edit.addr=full.slice(0,i);renderSet();if(i>=full.length){clearInterval(id);seqTimers.delete(id);timers.delete(id);if(done)done();}},55,seqTimers);
 }
 function runSeq(unattended){
   if(state.vpn.status==='on'){state.vpn.status='off';}
@@ -843,20 +920,29 @@ function runSeq(unattended){
     moveCursor(posOf(WIN.ra.hidden?WIN.set:WIN.ra,.55,.45),true);
     t=0;
   }
-  const inp=()=>$('#vpnAddr'),btn=()=>$('#vpnBtn');
-  S(()=>moveCursor(posOf(inp(),.3,.5)),t+500);
-  S(()=>{ripple(posOf(inp(),.3,.5));},t+1500);
-  S(()=>{state.vpn.addr='';render();},t+1900);
-  S(()=>typeInto(CORRECT,S),t+2100);
-  S(()=>moveCursor(posOf(btn(),.5,.5)),t+3500);
-  S(()=>{ripple(posOf(btn(),.5,.5));connectVPN();},t+4500);
-  S(()=>{hideCursor();state.seqRunning=false;state.controlDone=true;render();},t+6700);
+  fixVPN(t,S);
+}
+function fixVPN(t,S){ // IT edits the VPN profile: server address, VPN type, sign-in type, then connects
+  const P=(sel,fx,fy)=>posOf($(sel),fx==null?.5:fx,fy==null?.5:fy);
+  let c=t+300;
+  const mv=(sel,fx,fy)=>{const at=c;S(()=>moveCursor(P(sel,fx,fy)),at);c+=800;};
+  const rp=(sel,fx,fy,fn,gap)=>{const at=c;S(()=>{ripple(P(sel,fx,fy));if(fn)fn();},at);c+=gap||400;};
+  mv('#vpnAdv');rp('#vpnAdv',.5,.5,()=>openEdit());
+  mv('#veAddr',.3,.5);rp('#veAddr',.3,.5,()=>{state.edit.addr='';render();},300);
+  S(()=>typeInto(CORRECT,S),c);c+=CORRECT.length*55+300;
+  mv('#veType');rp('#veType',.5,.5,()=>{state.edit.list='type';render();},300);
+  mv('#veList [data-v="'+TYPE_OK+'"]',.3,.5);rp('#veList [data-v="'+TYPE_OK+'"]',.3,.5,()=>{state.edit.type=TYPE_OK;state.edit.list=null;render();},300);
+  mv('#veAuth');rp('#veAuth',.5,.5,()=>{state.edit.list='auth';render();},300);
+  mv('#veList [data-v="'+AUTH_OK+'"]',.3,.5);rp('#veList [data-v="'+AUTH_OK+'"]',.3,.5,()=>{state.edit.auth=AUTH_OK;state.edit.list=null;render();},300);
+  mv('#veSave');rp('#veSave',.5,.5,()=>saveEdit(),300);
+  mv('#vpnBtn');rp('#vpnBtn',.5,.5,()=>connectVPN(),300);
+  S(()=>{hideCursor();state.seqRunning=false;state.controlDone=true;render();},c+1400);
 }
 function connectVPN(){
   const v=state.vpn;if(v.status!=='off')return;
   v.status='wait';state.tried=false;renderSet();render();
   later(()=>{
-    if(state.vpn.addr===CORRECT){state.vpn.status='on';state.vpn.since=Date.now();}
+    if(state.vpn.addr===CORRECT&&state.vpn.type===TYPE_OK&&state.vpn.auth===AUTH_OK){state.vpn.status='on';state.vpn.since=Date.now();}
     else{state.vpn.status='off';state.tried=true;}
     render();
   },1300);
@@ -869,7 +955,7 @@ function beginAct2(){
   clearSet(timers);clearSet(seqTimers);stopTicks();
   state=initialState(2);
   clearTimeout(tipTimer);hideTip();curStep=null;dismissed=false;
-  hideCursor();$('#vpnAddr').value=WRONG;$('#pvHost').replaceChildren();
+  hideCursor();$('#pvHost').replaceChildren();
   render();
 }
 function backToAct1(){
@@ -882,11 +968,14 @@ function backToAct1(){
 function resetAll(){
   clearSet(timers);clearSet(seqTimers);stopTicks();
   state=initialState(1);act1Snap=null;
-  clearTimeout(tipTimer);hideTip();curStep=null;dismissed=false;
-  hideCursor();$('#vpnAddr').value=WRONG;
-  $('#pvHost').replaceChildren();
-  $('#raMain').scrollTop=0;
-  render();
+  try{
+    clearTimeout(tipTimer);hideTip();curStep=null;dismissed=false;
+    hideCursor();
+    $('#pvHost').replaceChildren();
+    $('#raMain').scrollTop=0;
+  }finally{
+    renderSet();render();
+  }
 }
 
 /* ===================== Events ===================== */
@@ -926,13 +1015,19 @@ $('#viewX').addEventListener('click',declineView);
 $('#ctrlAccept').addEventListener('click',acceptCtrl);
 $('#ctrlDecline').addEventListener('click',declineCtrl);
 $('#ctrlX').addEventListener('click',declineCtrl);
-$('#vpnAddr').addEventListener('input',e=>{if(!state.seqRunning){state.vpn.addr=e.target.value;}});
+$('#vpnAdv').addEventListener('click',()=>{if(!state.seqRunning&&state.vpn.status!=='wait')openEdit();});
+$('#veAddr').addEventListener('input',e=>{if(!state.seqRunning)state.edit.addr=e.target.value;});
+['type','auth'].forEach(k=>$(k==='type'?'#veType':'#veAuth').addEventListener('click',()=>{if(state.seqRunning)return;state.edit.list=state.edit.list===k?null:k;render();}));
+$('#veList').addEventListener('click',e=>{const li=e.target.closest('li');if(!li||state.seqRunning)return;state.edit[state.edit.list==='type'?'type':'auth']=li.dataset.v;state.edit.list=null;render();});
+$('#veSave').addEventListener('click',()=>{if(!state.seqRunning)saveEdit();});
+$('#veCancel').addEventListener('click',()=>{if(!state.seqRunning)cancelEdit();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.edit.open&&!state.seqRunning){if(state.edit.list){state.edit.list=null;render();}else cancelEdit();}});
 $('#vpnBtn').addEventListener('click',()=>{if(state.seqRunning)return;state.vpn.status==='on'?disconnectVPN():connectVPN();});
 $('#tipX').addEventListener('click',()=>{dismissed=true;hideTip();updateLabel();});
 $('#tipBack').addEventListener('click',()=>{if(!ready())return;const f=BACKS[curStep];if(f){f();render();}});
-function tipAct(){const c=TIPS[curStep];if(ready()&&c&&c.act)c.act();}
+function tipAct(){const c=TIPS[curStep];if((ready()||(c&&c.instant))&&c&&c.act)c.act();}
 $('#tipBtn').addEventListener('click',tipAct);
-$('#tipAlt').addEventListener('click',()=>{const c=TIPS[curStep];if(ready()&&c&&c.alt)c.alt.act();});
+$('#tipAlt').addEventListener('click',()=>{const c=TIPS[curStep];if((ready()||(c&&c.alt&&c.alt.instant))&&c&&c.alt)c.alt.act();});
 $('#labelBtn').addEventListener('click',tipAct);
 
 function fit(){
